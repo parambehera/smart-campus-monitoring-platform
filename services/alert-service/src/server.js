@@ -3,6 +3,7 @@ require("dotenv").config();
 
 const healthRoute = require("./routes/health");
 const testEmailRoute = require("./routes/testEmail");
+const testSlackRoute = require("./routes/testSlack");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 
 app.use("/health", healthRoute);
 app.use("/test-email", testEmailRoute);
+app.use("/test-slack", testSlackRoute);
 
 app.listen(PORT, () => {
   console.log(`Alert Service running on port ${PORT}`);
