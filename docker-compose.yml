@@ -1,0 +1,33 @@
+services:
+
+  redis:
+    image: redis:7.4
+    container_name: campus-redis
+
+    ports:
+      - "6379:6379"
+
+    restart: unless-stopped
+
+    volumes:
+      - redis-data:/data
+
+  device-service:
+    build:
+      context: ./services/device-service
+
+    container_name: device-service
+
+    ports:
+      - "8080:8080"
+
+    env_file:
+      - ./services/device-service/.env.docker
+
+    depends_on:
+      - redis
+
+    restart: unless-stopped
+
+volumes:
+  redis-data:

@@ -1,0 +1,23 @@
+# Build Stage
+FROM golang:1.25 AS builder
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+COPY . .
+
+RUN go build -o device-service ./cmd/server
+
+# Runtime Stage
+FROM debian:bookworm-slim
+
+WORKDIR /app
+
+COPY --from=builder /app/device-service .
+
+EXPOSE 8080
+
+CMD ["./device-service"]

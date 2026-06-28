@@ -1,19 +1,21 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-)
+	"device-service/internal/config"
+	"device-service/internal/routes"
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Welcome to Device Service 🚀")
-}
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
 
-	http.HandleFunc("/", homeHandler)
+	config.LoadEnv()
 
-	fmt.Println("Device Service running on port 8080...")
+	config.ConnectRedis()
 
-	http.ListenAndServe(":8080", nil)
+	router := gin.Default()
+
+	routes.RegisterRoutes(router)
+
+	router.Run(":" + config.GetEnv("SERVER_PORT"))
 }
