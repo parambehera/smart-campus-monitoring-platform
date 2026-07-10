@@ -1,5 +1,6 @@
 const express = require("express");
 require("dotenv").config();
+console.log(process.env.SLACK_WEBHOOK_URL);
 
 const healthRoute = require("./routes/health");
 const testEmailRoute = require("./routes/testEmail");
