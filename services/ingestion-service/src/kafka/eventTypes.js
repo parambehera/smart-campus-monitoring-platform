@@ -1,0 +1,3 @@
+export const EventTypes = {
+  SENSOR_READING_RECEIVED: "SENSOR_READING_RECEIVED",
+};

@@ -1,14 +1,10 @@
 services:
-
   redis:
     image: redis:7.4
     container_name: campus-redis
-
     ports:
       - "6379:6379"
-
     restart: unless-stopped
-
     volumes:
       - redis-data:/data
 
@@ -16,54 +12,47 @@ services:
     image: apache/kafka:4.0.2
     container_name: kafka
     hostname: kafka
-
     ports:
       - "9092:9092"
       - "9094:9094"
-
     environment:
       KAFKA_NODE_ID: 1
-
       KAFKA_PROCESS_ROLES: broker,controller
-
       KAFKA_LISTENERS: CONTROLLER://:9093,HOST://:9092,DOCKER://:9094
-
       KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,DOCKER://kafka:9094
-
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,HOST:PLAINTEXT,DOCKER:PLAINTEXT
-
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-
       KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
-
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-
     restart: unless-stopped
 
   device-service:
     build:
       context: ./services/device-service
-
     container_name: device-service
-
     ports:
       - "8080:8080"
-
     env_file:
       - ./services/device-service/.env.docker
-
     depends_on:
       - redis
       - kafka
+    restart: unless-stopped
 
+  ingestion-service:
+    build:
+      context: ./services/ingestion-service
+    container_name: ingestion-service
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./services/ingestion-service/.env.docker
+    depends_on:
+      - kafka
     restart: unless-stopped
 
 volumes:
