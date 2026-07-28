@@ -55,5 +55,15 @@ services:
       - kafka
     restart: unless-stopped
 
+  analytics-service:
+    build:
+      context: ./services/analytics-service
+    container_name: analytics-service
+    env_file:
+      - ./services/analytics-service/.env.docker
+    depends_on:
+      - kafka
+    restart: unless-stopped
+
 volumes:
   redis-data:
