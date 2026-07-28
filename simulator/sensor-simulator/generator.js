@@ -5,7 +5,7 @@ function randomBattery() {
 }
 
 function randomTemperature() {
-  return +(25 + Math.random() * 10).toFixed(2);
+  return +(40 + Math.random() * 15).toFixed(2);
 }
 
 function randomHumidity() {
